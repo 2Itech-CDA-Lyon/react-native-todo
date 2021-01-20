@@ -1,0 +1,19 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "description": "Faire des courses (avant le couvre-feu)",
+      "done": false
+    },
+    {
+      "id": 2,
+      "description": "Terminer mon TP",
+      "done": false
+    },
+    {
+      "id": 3,
+      "description": "Manger (parce que la santé c'est important)",
+      "done": false
+    }
+  ]
+}
