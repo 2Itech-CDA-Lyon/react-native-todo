@@ -2,6 +2,7 @@ import React, { FC, useContext } from 'react';
 import { Button, Icon, ListItem } from 'react-native-elements';
 import { TaskContext } from '../contexts';
 import { ITask } from '../models';
+import TaskDeleteButton from './TaskDeleteButton';
 
 interface ITaskProps {
   task : ITask;
@@ -26,18 +27,7 @@ const Task : FC<ITaskProps> = ( { task } ) =>
         </ListItem.Title>
       </ListItem.Content>
 
-      <Button
-        buttonStyle={{ backgroundColor: "#E74C3C" }}
-        icon={
-          <Icon
-            type="font-awesome"
-            name="trash"
-            size={20}
-            color="white"
-          />
-        }
-        onPress={() => task.id && actions.deleteTask(task.id)}
-      />
+      {task.id && <TaskDeleteButton id={task.id} />}
     </ListItem>
   );
 }
