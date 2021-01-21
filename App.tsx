@@ -5,27 +5,15 @@ import { Button, Icon, Input, ListItem } from 'react-native-elements';
 import { useFetchAllTasks } from './hooks';
 import { ITask } from './models';
 import RequestState from './request-state';
+import { Task, TaskAddForm }from './components'
 
 
 export default function App() {
   // Récupère la liste des tâches et les méthodes permettant de la transformer dans un hook personnalisé délégué à cet effet
   const { tasks, requestState, actions } = useFetchAllTasks();
-  // Retient l'état actuel du champ textxe "nom de la nouvelle tâche"
-  const [newTaskDescription, setNewTaskDescription] = useState('');
-
-  // Tant que la requête est en cours, affiche un indicateur de chargement
-  if (requestState === RequestState.Pending) {
-    return <ActivityIndicator />;
-  }
 
   // Génère une fonction permettant de créer une nouvelle tâche
-  const createTask = () => {
-    // Construit l'objet décrivant la tâche à ajouter
-    const newTask: ITask = {
-      description: newTaskDescription,
-      done: false,
-    };
-
+  const createTask = (newTask: ITask) => {
     // Envoie une requête dans l'API...
     fetch('http://localhost:3000/tasks', {
       // ...avec une méthode HTTP "POST" (création de contenu)...
@@ -83,49 +71,20 @@ export default function App() {
     .then((json: ITask) => actions.updateTask(id, json));
   }
 
+  // Tant que la requête est en cours, affiche un indicateur de chargement
+  if (requestState === RequestState.Pending) {
+    return <ActivityIndicator />;
+  }
+    
   // Dès que la requête a réussi, bascule sur l'affichage normal
   return (
     <View style={styles.background}>
       <View style={styles.container}>
         {tasks.map(
           (task, index) =>
-            <ListItem
-              key={index}
-              bottomDivider
-            >
-              <ListItem.CheckBox 
-                checked={task.done} 
-                onPress={() => task.id && updateTask(task.id, {...task, done: !task.done})}
-              />
-              <ListItem.Content>
-                <ListItem.Title>
-                  {task.description}
-                </ListItem.Title>
-              </ListItem.Content>
-              <Button
-                buttonStyle={{ backgroundColor: "#E74C3C" }}
-                icon={
-                  <Icon
-                    type="font-awesome"
-                    name="trash"
-                    size={20}
-                    color="white"
-                  />
-                }
-                onPress={() => task.id && deleteTask(task.id)}
-              />
-            </ListItem>
+            <Task key={index} task={task} actions={ { updateTask , deleteTask } }/>
         )}
-        <Input
-          label="Nouvelle tâche"
-          placeholder="Entrez la description"
-          onChangeText={text => setNewTaskDescription(text)}
-          value={newTaskDescription}
-        />
-        <Button
-          onPress={createTask}
-          title="Ajouter"
-        />
+        <TaskAddForm actions= { { createTask } } />
       </View>
       <StatusBar style="auto" />
     </View>
