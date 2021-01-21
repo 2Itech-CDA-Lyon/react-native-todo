@@ -5,7 +5,7 @@ import { Button, Icon, Input, ListItem } from 'react-native-elements';
 import { useFetchAllTasks } from './hooks';
 import { ITask } from './models';
 import RequestState from './request-state';
-import { Task, TaskAddForm }from './components'
+import { Task, TaskAddForm, TaskList }from './components'
 
 
 export default function App() {
@@ -80,10 +80,10 @@ export default function App() {
   return (
     <View style={styles.background}>
       <View style={styles.container}>
-        {tasks.map(
-          (task, index) =>
-            <Task key={index} task={task} actions={ { updateTask , deleteTask } }/>
-        )}
+        <TaskList
+          tasks={tasks}
+          actions={ { updateTask , deleteTask } }
+        />
         <TaskAddForm actions= { { createTask } } />
       </View>
       <StatusBar style="auto" />

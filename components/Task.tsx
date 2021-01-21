@@ -5,7 +5,7 @@ import { ITask } from '../models';
 interface ITaskprops {
   task : ITask;
   actions : {
-    updateTask : (id: number, tast : ITask) => void;
+    updateTask : (id: number, task : ITask) => void;
     deleteTask : (id: number) => void;
   }
 }
