@@ -1,23 +1,43 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import { ListItem } from 'react-native-elements';
+import React, { useState } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { Button, Input, ListItem } from 'react-native-elements';
 import { useFetchAllTasks } from './hooks';
+import { ITask } from './models';
 import RequestState from './request-state';
 
 
 export default function App() {
-  const { tasks, requestState } = useFetchAllTasks();
+  const { tasks, requestState, actions } = useFetchAllTasks();
+
+  const [newTaskDescription, setNewTaskDescription] = useState('');
 
   // Tant que la requête est en cours, affiche un indicateur de chargement
   if (requestState === RequestState.Pending) {
     return <ActivityIndicator />;
   }
+
+  const createTask = () => {
+    const newTask: ITask = {
+      description: newTaskDescription,
+      done: false,
+    };
+
+    fetch('http://localhost:3000/tasks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      body: JSON.stringify(newTask),
+    })
+    .then(response => response.json())
+    .then( (json: ITask) => actions.addTask(json));
+  }
   
   // Dès que la requête a réussi, bascule sur l'affichage normal
   return (
-    <View style={styles.container}>
-      <View>
+    <View style={styles.background}>
+      <View style={styles.container}>
         {tasks.map(
           (task, index) =>
             <ListItem
@@ -32,6 +52,16 @@ export default function App() {
               </ListItem.Content>
             </ListItem>
         )}
+        <Input
+          label="Nouvelle tâche"
+          placeholder="Entrez la description"
+          onChangeText={text => setNewTaskDescription(text)}
+          value={newTaskDescription}
+        />
+        <Button
+          onPress={createTask}
+          title="Ajouter"
+        />
       </View>
       <StatusBar style="auto" />
     </View>
@@ -39,10 +69,13 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
     backgroundColor: '#eee',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  container: {
+    backgroundColor: '#fff',
+  }
 });

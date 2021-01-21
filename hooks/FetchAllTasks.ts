@@ -35,11 +35,25 @@ const useFetchAllTasks = () => {
     []
   );
 
+  // Crée une fonction permettant d'ajouter une tâche aux tâches existantes
+  const addTask = (newTask: ITask) => {
+    // Remplace la liste de tâches actuelle par une nouvelle liste contenant...
+    setTasks([
+      // ...tout le contenu actuel de la liste...
+      ...tasks,
+      // ...ainsi que la nouvelle tâche
+      newTask
+    ]);
+  }
+
   // Renvoie l'état actuel de la liste des tâches et de l'avancement de la requête dans le composant
   // qui a appelé ce hook afin qu'il puisse adapter son affichage en fonction
   return {
     tasks,
     requestState,
+    actions: {
+      addTask,
+    }
   };
 };
 
