@@ -1,11 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { Button, Icon, Input, ListItem } from 'react-native-elements';
 import { useFetchAllTasks } from './hooks';
 import { ITask } from './models';
 import RequestState from './request-state';
-import { Task, TaskAddForm, TaskList }from './components'
+import { TaskAddForm, TaskList }from './components'
+import { TaskContext } from './contexts';
 
 
 export default function App() {
@@ -71,6 +71,15 @@ export default function App() {
     .then((json: ITask) => actions.updateTask(id, json));
   }
 
+  const contextValue = {
+    tasks,
+    actions: {
+      createTask,
+      updateTask,
+      deleteTask,
+    }
+  };
+
   // Tant que la requête est en cours, affiche un indicateur de chargement
   if (requestState === RequestState.Pending) {
     return <ActivityIndicator />;
@@ -80,11 +89,10 @@ export default function App() {
   return (
     <View style={styles.background}>
       <View style={styles.container}>
-        <TaskList
-          tasks={tasks}
-          actions={ { updateTask , deleteTask } }
-        />
-        <TaskAddForm actions= { { createTask } } />
+        <TaskContext.Provider value={contextValue}>
+          <TaskList />
+          <TaskAddForm />
+        </TaskContext.Provider>
       </View>
       <StatusBar style="auto" />
     </View>

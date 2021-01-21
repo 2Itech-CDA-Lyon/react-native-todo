@@ -1,16 +1,13 @@
-import React, { FC , useState } from 'react';
+import React, { FC , useContext, useState } from 'react';
 import { View } from 'react-native';
 import { Input, Button } from 'react-native-elements';
-import { ITask } from '../models';
+import { TaskContext } from '../contexts';
 
-interface TaskAddFormProps {
-  actions : {
-    createTask : (newTask: ITask) => void;
-  }
-}
 
-const TaskAddForm : FC<TaskAddFormProps> = ( {actions} ) => 
+const TaskAddForm : FC = () => 
 {
+  const { actions } = useContext(TaskContext);
+
   // Retient l'état actuel du champ textxe "nom de la nouvelle tâche"
   const [newTaskDescription, setNewTaskDescription] = useState('');
   
@@ -30,7 +27,7 @@ const TaskAddForm : FC<TaskAddFormProps> = ( {actions} ) =>
         title="Ajouter"
       />
     </View>
-    )      
-  }
+  );
+}
   
-  export default TaskAddForm;
+export default TaskAddForm;

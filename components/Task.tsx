@@ -1,17 +1,16 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { Button, Icon, ListItem } from 'react-native-elements';
+import { TaskContext } from '../contexts';
 import { ITask } from '../models';
 
-interface ITaskprops {
+interface ITaskProps {
   task : ITask;
-  actions : {
-    updateTask : (id: number, task : ITask) => void;
-    deleteTask : (id: number) => void;
-  }
 }
 
-const Task : FC<ITaskprops> = ( { task, actions } ) => 
+const Task : FC<ITaskProps> = ( { task } ) => 
 {
+  const { actions } = useContext(TaskContext);
+
   return (
     <ListItem
       bottomDivider
