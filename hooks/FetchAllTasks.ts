@@ -67,6 +67,8 @@ const useFetchAllTasks = () => {
 
   // Renvoie l'état actuel de la liste des tâches et de l'avancement de la requête dans le composant
   // qui a appelé ce hook afin qu'il puisse adapter son affichage en fonction
+  // Ainsi qu'une série de fonctions permettant au composant qui a appelé ce hook de transformer la
+  // liste des tâches
   return {
     tasks,
     requestState,
