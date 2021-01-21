@@ -9,7 +9,6 @@ import RequestState from './request-state';
 
 export default function App() {
   const { tasks, requestState, actions } = useFetchAllTasks();
-
   const [newTaskDescription, setNewTaskDescription] = useState('');
 
   // Tant que la requête est en cours, affiche un indicateur de chargement
@@ -42,6 +41,18 @@ export default function App() {
     .then(() => actions.removeTask(id));
   }
 
+  const updateTask = (id: number, task: ITask) => {
+    fetch(`http://localhost:3000/tasks/${id}`,{
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      body: JSON.stringify(task)
+    })
+    .then(response => response.json())
+    .then((json: ITask) => actions.updateTask(id, json));
+  }
+
   // Dès que la requête a réussi, bascule sur l'affichage normal
   return (
     <View style={styles.background}>
@@ -52,7 +63,10 @@ export default function App() {
               key={index}
               bottomDivider
             >
-              <ListItem.CheckBox checked={false} />
+              <ListItem.CheckBox 
+                checked={task.done} 
+                onPress={() => task.id && updateTask(task.id, {...task, done: !task.done})}
+              />
               <ListItem.Content>
                 <ListItem.Title>
                   {task.description}

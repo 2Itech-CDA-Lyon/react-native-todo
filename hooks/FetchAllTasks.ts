@@ -46,12 +46,22 @@ const useFetchAllTasks = () => {
     ]);
   }
 
-  // Crée une fonction permettant de supprimer une tâche aux tâches existantes
+  // Crée une fonction permettant de supprimer une tâche des tâches existantes
   const removeTask = (id: number) => {
     // Remplace la liste de tâches actuelle par une nouvelle liste...
     setTasks(
       // ...contenant uniquement les tâches qui n'ont pas l'ID demandé
       tasks.filter( (task) => task.id !== id)
+    );
+  }
+
+  // Crée une fonction permettant de modifier une tâche parmi les tâches existantes
+  const updateTask = (id: number, updatedTask: ITask) => {
+    // Remplace la liste de tâches actuelle par une nouvelle liste...
+    setTasks(
+      // ...dans laquelle l'élément ayant l'ID demandé est remplacé par le nouvel objet fourni
+      // et tous les autres gardent leur état actuel
+      tasks.map(task => task.id === id ? updatedTask : task)
     );
   }
 
@@ -63,6 +73,7 @@ const useFetchAllTasks = () => {
     actions: {
       addTask,
       removeTask,
+      updateTask
     }
   };
 };
