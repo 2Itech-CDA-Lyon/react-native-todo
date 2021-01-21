@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { Button, Input, ListItem } from 'react-native-elements';
+import { Button, Icon, Input, ListItem } from 'react-native-elements';
 import { useFetchAllTasks } from './hooks';
 import { ITask } from './models';
 import RequestState from './request-state';
@@ -31,9 +31,17 @@ export default function App() {
       body: JSON.stringify(newTask),
     })
     .then(response => response.json())
-    .then( (json: ITask) => actions.addTask(json));
+    .then((json: ITask) => actions.addTask(json));
   }
-  
+
+  const deleteTask = (id: number) => {
+    fetch(`http://localhost:3000/tasks/${id}`, {
+      method: 'DELETE',
+    })
+    .then(response => response.json())
+    .then(() => actions.removeTask(id));
+  }
+
   // Dès que la requête a réussi, bascule sur l'affichage normal
   return (
     <View style={styles.background}>
@@ -50,6 +58,18 @@ export default function App() {
                   {task.description}
                 </ListItem.Title>
               </ListItem.Content>
+              <Button
+                buttonStyle={{ backgroundColor: "#E74C3C" }}
+                icon={
+                  <Icon
+                    type="font-awesome"
+                    name="trash"
+                    size={20}
+                    color="white"
+                  />
+                }
+                onPress={() => task.id && deleteTask(task.id)}
+              />
             </ListItem>
         )}
         <Input
